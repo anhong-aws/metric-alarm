@@ -56,6 +56,7 @@ class PointEvaluator:
     def evaluate(self, metric_statistics, threshold):
         consecutive_high_points = 0
         all_metrics = []
+        print(f"metric_statistics: {metric_statistics}")
         for point in metric_statistics['Datapoints']:
             if point[SUM] >= threshold:
                 consecutive_high_points += 1
@@ -109,7 +110,7 @@ class MetricManager:
             print(f"aws service id: {distribution_id}")
             evaluator = PointEvaluator(config)
             all_metrics, is_alarm_triggered = evaluator.evaluate(metric_statistics, config[THRESHOLD])
-            print(f"aws is_alarm_triggered id: {is_alarm_triggered}")
+            print(f"is_alarm_triggered: {is_alarm_triggered}")
             if is_alarm_triggered:
                 is_disable_triggered = evaluator.evaluate_for_disable(metric_statistics, config[AUTO_DISABLE_SERVICE_THRESHOLD])
                 print(f"aws is_disable_triggered id: {is_disable_triggered}")
