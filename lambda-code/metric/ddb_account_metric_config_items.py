@@ -5,7 +5,7 @@ class DdbAccountMetricConfigItems(DdbDao):
         super().__init__('account-metric-config-items')
     
     def read_item_by_status(self):
-        response = self.query_items_by_attribute('status', 'enable')
+        response = self.query_items_by_attribute('status', 'open')
         return response
     
 # 测试代码
@@ -15,8 +15,8 @@ if __name__ == "__main__":
 
     # 定义要插入的数据
     test_item = {
-        'account_id': '611234940057',
-        'role': 'OrganizationAccountAccessRole',
+        'account_id': '123',
+        'role': 'test_role',
         'period': 300,
         'minutes': 30,
         'threshold': 10,
@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     # 读取项目
     print("\nReading item...")
-    key = {'account_id': '611234940057'}
+    key = {'account_id': '123'}
     item = metric_table.read_item(key)
     print("Read item:", item)
 
@@ -55,6 +55,6 @@ if __name__ == "__main__":
     print("Updated item:", item)
 
     # 删除项目
-    # print("\nDeleting item...")
-    # response = metric_table.delete_item(key)
-    # print("Delete item response:", response)
+    print("\nDeleting item...")
+    response = metric_table.delete_item(key)
+    print("Delete item response:", response)

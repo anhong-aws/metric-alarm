@@ -2,11 +2,32 @@
 import datetime
 import boto3
 def get_metric_statistics(credentials, distribution, minutes = 30, period = 300, Statistics = 'Sum'):
-    start_time = datetime.datetime.utcnow() - datetime.timedelta(minutes=minutes)
-    end_time = datetime.datetime.utcnow()
+    start_time = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=minutes)
+    end_time = datetime.datetime.now(datetime.timezone.utc)
     return get_metric_statistics_custom(credentials, distribution, start_time, end_time, period, Statistics)
 
 def get_metric_statistics_custom(credentials, distribution, start_time, end_time, period = 300, Statistics = 'Sum'):
+
+    metric_statistics = get_common_metric_statistics(credentials, distribution, start_time, end_time, period = 300, Statistics = 'Sum')
+    if metric_statistics.get('Datapoints') and len(metric_statistics['Datapoints']) > 0:
+        
+        return {
+            'StartTime': start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'EndTime': end_time.strftime("%Y-%m-%d %H:%M:%S"),
+            'Datapoints': metric_statistics.get('Datapoints'),
+            'MetricName': 'Requests',
+            'Namespace': 'AWS/CloudFront',
+            'Statistics': Statistics,
+            'Period': period
+        }
+    else:
+        return {
+            'StartTime': start_time,
+            'EndTime': end_time,
+            'Datapoints': []
+        }
+
+def get_common_metric_statistics(credentials, distribution, start_time, end_time, period = 300, Statistics = 'Sum'):
     cloudwatch = boto3.client('cloudwatch',
                               aws_access_key_id=credentials['AccessKeyId'],
                               aws_secret_access_key=credentials['SecretAccessKey'],
@@ -31,19 +52,4 @@ def get_metric_statistics_custom(credentials, distribution, start_time, end_time
         Dimensions=[{'Name': 'DistributionId', 'Value': distribution_id},
                     {'Name': 'Region', 'Value': 'Global'}]
     )
-    if metric_statistics.get('Datapoints') and len(metric_statistics['Datapoints']) > 0:
-        return {
-            'StartTime': start_time.strftime("%Y-%m-%d %H:%M:%S"),
-            'EndTime': end_time.strftime("%Y-%m-%d %H:%M:%S"),
-            'Datapoints': metric_statistics.get('Datapoints'),
-            'MetricName': 'Requests',
-            'Namespace': 'AWS/CloudFront',
-            'Statistics': Statistics,
-            'Period': period
-        }
-    else:
-        return {
-            'StartTime': start_time,
-            'EndTime': end_time,
-            'Datapoints': []
-        }
+    return metric_statistics

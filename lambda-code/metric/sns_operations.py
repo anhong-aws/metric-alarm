@@ -1,4 +1,6 @@
 import boto3
+import json
+
 
 def get_sns():
     sns_client = boto3.client('sns')
@@ -13,53 +15,29 @@ def check_topic_existence(topic_name):
             return topic['TopicArn']  # 如果主题已存在，返回现有主题的 ARN
     return None
 
-def create_topic(topic_name):
-    existing_topic_arn = check_topic_existence(topic_name)
-    if existing_topic_arn:
-        print("Topic already exists with ARN:", existing_topic_arn)
-        return existing_topic_arn
-    else:
-        sns_client = get_sns()
-        response = sns_client.create_topic(Name=topic_name)
-        return response['TopicArn']
-
-def check_subscription_existence(topic_arn, email_address):
-    sns_client = get_sns()
-    response = sns_client.list_subscriptions_by_topic(TopicArn=topic_arn)
-    subscriptions = response['Subscriptions']
-    for subscription in subscriptions:
-        if subscription['Protocol'] == 'email' and subscription['Endpoint'] == email_address:
-            return True
-    return False
-
-def subscribe_email_to_topic(topic_arn, email_address):
-    if not check_subscription_existence(topic_arn, email_address):
-        sns_client = get_sns()
-        response = sns_client.subscribe(
-            TopicArn=topic_arn,
-            Protocol='email',
-            Endpoint=email_address
-        )
-        return response['SubscriptionArn']
-    else:
-        print("Email address already subscribed to the topic.")
-        return None
-
-# TODO: 需要处理短时间的重复发送
-def publish_message_to_topic(topic_arn, message):
+def publish_message_to_topic(topic_arn, subject, default_message, email_message, type='alarm'):
+    print(f"开始发布sns, 邮件标题: {subject}")
     if topic_arn:
         # 发布消息到 SNS 主题
         sns_client = get_sns()
-        response = sns_client.publish(
-            TopicArn=topic_arn,
-            Subject='cdn request over limit',
-            Message=message,
-            # MessageAttributes={
-            #     'email': {
-            #         'DataType': 'String.Array',
-            #         'StringValue': ','.join(email_addresses)
-            #     }
-            # }
-        )
-        print(f"Message published successfully.Message: {message}")
+        message = {
+            "default": default_message,
+            # "sms": sms_message,
+            "email": email_message,
+        }
+        # response = sns_client.publish(
+        #     TopicArn=topic_arn,
+        #     Subject=subject,
+        #     Message=json.dumps(message),
+        #     MessageStructure="json",
+        #     MessageAttributes={
+        #         'type': {
+        #             'DataType': 'String',
+        #             'StringValue': type
+        #         }
+        #     }
+        # )
+        # print(response['MessageId'])
+        print(f"Message published successfully.Message: {default_message}")
+        print("发布sns结束")
 

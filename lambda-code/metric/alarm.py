@@ -7,7 +7,7 @@ class Alarm:
         self.timestamp = None
         self.aws_account = None
         self.alarm_arn = None
-        self.datapoints = []
+        # self.datapoints = []
 
         self.threshold = {
             "metric_name": "Requests",
@@ -28,6 +28,9 @@ class Alarm:
 
         self.state_change_actions = {
             "OK": [],
-            "ALARM": ["arn:aws:sns:us-east-1:284367710968:alert-topic"],
+            "ALARM": ["arn:aws:sns:us-east-1:中文:alert-topic"],
             "INSUFFICIENT_DATA": []
         }
+
+if __name__ == "__main__":
+    print(Alarm().__dict__)

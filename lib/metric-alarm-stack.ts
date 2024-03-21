@@ -5,8 +5,10 @@ import * as events from 'aws-cdk-lib/aws-events';
 import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as iam from 'aws-cdk-lib/aws-iam'; // 引入 IAM 相关模块
 import * as ddb from 'aws-cdk-lib/aws-dynamodb';
+import { CfnOutput } from 'aws-cdk-lib';
 
 export class MetricAlarmStack extends cdk.Stack {
+  public readonly myLambdaArn: string;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -16,6 +18,16 @@ export class MetricAlarmStack extends cdk.Stack {
       tableName: 'account-metric-config-items',
       partitionKey: {name: 'account_id', type: ddb.AttributeType.STRING},
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    })
+
+    //crate a dynamodb table
+    const recentLogtable = new ddb.Table(this, 'ServiceUsageMetricsSummary', {
+      tableName: 'service-usage-metrics-summary',
+      partitionKey: {name: 'account_id', type: ddb.AttributeType.STRING},
+      sortKey: { name: 'service_id', type: ddb.AttributeType.STRING },
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      // timeToLiveAttribute: 'expire_time', // 定义 TTL 属性名称
       removalPolicy: cdk.RemovalPolicy.DESTROY
     })
 
@@ -69,5 +81,12 @@ export class MetricAlarmStack extends cdk.Stack {
       schedule: events.Schedule.rate(cdk.Duration.minutes(30)), // 每5分钟执行一次
     });
     rule.addTarget(new targets.LambdaFunction(pythonLambda));
+    // 输出 Lambda 函数的 ARN
+    new CfnOutput(this, 'MyLambdaArn', {
+      value: pythonLambda.functionArn,
+      exportName: 'MyLambdaArnExport'
+    });
+
+    this.myLambdaArn = pythonLambda.functionArn;
   }
 }

@@ -3,6 +3,7 @@ import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { MetricAlarmStack } from '../lib/metric-alarm-stack';
 import { AlarmLogsStack } from '../lib/alarm-logs-stack';
+// import { DataPointStack } from '../lib/data-point-stack';
 
 const app = new cdk.App();
 new MetricAlarmStack(app, 'MetricAlarmStack', {
@@ -23,3 +24,6 @@ new MetricAlarmStack(app, 'MetricAlarmStack', {
 
 new AlarmLogsStack(app, 'AlarmLogsStack', {
 });
+
+// new DataPointStack(app, 'DataPointStack', {
+// });

@@ -1,6 +1,10 @@
 # index.py
-from metric import subaccounts_and_metrics_alarm
-from account_configs import account_configs
+from account_config_manager import AccountConfigManager
+from metric_manager import MetricManager
+
 
 def handler(event, context):
-    subaccounts_and_metrics_alarm(account_configs)
+    accountConfigManager = AccountConfigManager()
+    account_configs = accountConfigManager.read_account_configs()
+    metricManager = MetricManager()
+    metricManager.run(account_configs)

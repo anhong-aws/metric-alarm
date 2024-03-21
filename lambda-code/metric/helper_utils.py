@@ -26,8 +26,8 @@ class HelperUtils:
     def convert_json_text(obj):
         formatted_lines = HelperUtils.format_json(obj)
         formatted_text = '\n'.join(formatted_lines)
-        print("带有短划线和多层级的格式化文本:")
-        print(formatted_text)
+        # print("带有短划线和多层级的格式化文本:")
+        # print(formatted_text)
         return formatted_text
     
     @staticmethod
