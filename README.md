@@ -55,19 +55,22 @@ Example Record:
 - 所有LinkedAccount的告警都会发送到payer_topic_name
 - 如果send_linked_sns_flag为open，则需要创建一个LinkedAccount的sns，topic必须跟linked_topic_name一样，这个只发送这个账号下的告警
 # 代码
-## lambda代码
+## lambda代码(python)
 ```
 lambda-code/
     └── metric                 采集&告警的lambda
         ├── index.py           lambda主函数
         ├── metric_manager.py          业务逻辑主体：采集指标、告警
 ```
-## 代码调试
-建议直接运行python
+## 本地调试
+
 ```
-修改入参，运行metric.py等
+# pip install pytest
+# pip install moto
+# 修改[account_config_manager.py](lambda-code/metric/account_config_manager.py)的get_mock_account_config里面的aws账户，阈值等
+pytest -m metric -s
 ```
-## CDK代码
+## CDK代码(TypeScript)
 ```
 lib
 └── metric-alarm-stack.ts   读取配置、采集指标、告警
