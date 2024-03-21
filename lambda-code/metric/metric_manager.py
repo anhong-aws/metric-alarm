@@ -56,7 +56,6 @@ class PointEvaluator:
     def evaluate(self, metric_statistics, threshold):
         consecutive_high_points = 0
         all_metrics = []
-        print(f"metric_statistics: {metric_statistics}")
         for point in metric_statistics['Datapoints']:
             if point[SUM] >= threshold:
                 consecutive_high_points += 1
@@ -67,6 +66,7 @@ class PointEvaluator:
                     'Datapoint': point
                 })
             else:
+                print(f"consecutive_high_points: {consecutive_high_points} data_point: {point[SUM]}")
                 consecutive_high_points = 0
                 all_metrics = []
 
