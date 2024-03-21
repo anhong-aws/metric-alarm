@@ -25,19 +25,19 @@ def publish_message_to_topic(topic_arn, subject, default_message, email_message,
             # "sms": sms_message,
             "email": email_message,
         }
-        # response = sns_client.publish(
-        #     TopicArn=topic_arn,
-        #     Subject=subject,
-        #     Message=json.dumps(message),
-        #     MessageStructure="json",
-        #     MessageAttributes={
-        #         'type': {
-        #             'DataType': 'String',
-        #             'StringValue': type
-        #         }
-        #     }
-        # )
-        # print(response['MessageId'])
+        response = sns_client.publish(
+            TopicArn=topic_arn,
+            Subject=subject,
+            Message=json.dumps(message),
+            MessageStructure="json",
+            MessageAttributes={
+                'type': {
+                    'DataType': 'String',
+                    'StringValue': type
+                }
+            }
+        )
+        print(response['MessageId'])
         print(f"Message published successfully.Message: {default_message}")
         print("发布sns结束")
 

@@ -6,6 +6,7 @@
   },
   "scripts": {
     "clean": "rimraf node_modules/ dist/ .next/ cdk.out */*.js */*.d.ts package-lock.json",
+    "jsclean": "rimraf */*.js */*.d.ts package-lock.json",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",

@@ -59,6 +59,7 @@ class PointEvaluator:
         for point in metric_statistics['Datapoints']:
             if point[SUM] >= threshold:
                 consecutive_high_points += 1
+                print(f"consecutive_high_points: {consecutive_high_points} data_point: {point[SUM]}")
                 all_metrics.append({
                     'StartTime': metric_statistics['StartTime'],
                     'EndTime': metric_statistics['EndTime'],

@@ -5,6 +5,9 @@ Please run `cdk deploy --all` to deploy this stack in your AWS account.
 # 部署
 ## 1.部署CDK应用程序
 ```
+cd ./metric-alarm
+npm install
+npm run build
 cdk deploy --all
 ```
 本工程会创建

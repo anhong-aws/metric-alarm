@@ -40,4 +40,4 @@ def test_subaccounts_and_metrics_alarm_mock():
         use_mock = True
         account_configs = accountConfigManager.read_account_configs(use_mock=use_mock)
         metric = MetricManager(account_configs)
-        metric.run(use_mock=use_mock)
+        metric.run()

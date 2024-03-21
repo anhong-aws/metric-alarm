@@ -1,5 +1,7 @@
 # CDK
 cdk.out/
+*.js
+*.d.ts
 # Logs
 logs
 *.log

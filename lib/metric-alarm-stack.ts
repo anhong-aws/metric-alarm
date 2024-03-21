@@ -8,7 +8,7 @@ import * as ddb from 'aws-cdk-lib/aws-dynamodb';
 import { CfnOutput } from 'aws-cdk-lib';
 
 export class MetricAlarmStack extends cdk.Stack {
-  public readonly myLambdaArn: string;
+  public readonly AlarmLambdaArn: string;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -18,16 +18,6 @@ export class MetricAlarmStack extends cdk.Stack {
       tableName: 'account-metric-config-items',
       partitionKey: {name: 'account_id', type: ddb.AttributeType.STRING},
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.DESTROY
-    })
-
-    //crate a dynamodb table
-    const recentLogtable = new ddb.Table(this, 'ServiceUsageMetricsSummary', {
-      tableName: 'service-usage-metrics-summary',
-      partitionKey: {name: 'account_id', type: ddb.AttributeType.STRING},
-      sortKey: { name: 'service_id', type: ddb.AttributeType.STRING },
-      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      // timeToLiveAttribute: 'expire_time', // 定义 TTL 属性名称
       removalPolicy: cdk.RemovalPolicy.DESTROY
     })
 
@@ -63,7 +53,7 @@ export class MetricAlarmStack extends cdk.Stack {
     }));
 
     // 创建 Python Lambda 函数
-    const pythonLambda = new lambda.Function(this, 'MetricLambda', {
+    const alarmLambda = new lambda.Function(this, 'MetricLambda', {
       runtime: lambda.Runtime.PYTHON_3_8,
       handler: 'index.handler', // 指定 Lambda 处理程序的入口函数
       code: lambda.Code.fromAsset('./lambda-code/metric'), // 替换为您的 Python Lambda 代码路径
@@ -80,13 +70,13 @@ export class MetricAlarmStack extends cdk.Stack {
     const rule = new events.Rule(this, 'MyRule', {
       schedule: events.Schedule.rate(cdk.Duration.minutes(30)), // 每5分钟执行一次
     });
-    rule.addTarget(new targets.LambdaFunction(pythonLambda));
+    rule.addTarget(new targets.LambdaFunction(alarmLambda));
     // 输出 Lambda 函数的 ARN
-    new CfnOutput(this, 'MyLambdaArn', {
-      value: pythonLambda.functionArn,
-      exportName: 'MyLambdaArnExport'
+    new CfnOutput(this, 'AlarmLambdaArn', {
+      value: alarmLambda.functionArn,
+      exportName: 'AlarmLambdaArnExport'
     });
 
-    this.myLambdaArn = pythonLambda.functionArn;
+    this.AlarmLambdaArn = alarmLambda.functionArn;
   }
 }
