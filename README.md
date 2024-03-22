@@ -9,6 +9,7 @@ Please run `cdk deploy --all` to deploy this stack in your AWS account.
 cd ./metric-alarm
 npm install
 npm run build
+./package_lambda_layer.sh
 cdk deploy --all
 ```
 本工程会创建
