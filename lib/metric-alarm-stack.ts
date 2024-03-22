@@ -52,14 +52,22 @@ export class MetricAlarmStack extends cdk.Stack {
       resources: ['*'], // 这里资源可以根据你的实际需求进行限制
     }));
 
+
+    // 创建 Lambda 层
+    const metricDepsLayer = new lambda.LayerVersion(this, 'MetricDepsLayer', {
+      code: lambda.Code.fromAsset('./lambda-code/metric-deps'), // 替换为您的依赖项目录路径
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_10], // 指定兼容的 Python 运行时版本
+      description: 'Metric Python dependencies layer'
+    });
     // 创建 Python Lambda 函数
     const alarmLambda = new lambda.Function(this, 'MetricLambda', {
       runtime: lambda.Runtime.PYTHON_3_10,
-      handler: 'index.handler', // 指定 Lambda 处理程序的入口函数
+      handler: 'index.handler',         // 指定 Lambda 处理程序的入口函数
       code: lambda.Code.fromAsset('./lambda-code/metric'), // 替换为您的 Python Lambda 代码路径
-      role: lambdaExecutionRole, // 关联 Lambda 执行角色
-      memorySize: 256, // 内存128M
-      timeout: cdk.Duration.minutes(3) // 设置超时时间为 3 分钟
+      role: lambdaExecutionRole,        // 关联 Lambda 执行角色
+      memorySize: 256,                  // 内存128M
+      timeout: cdk.Duration.minutes(3), // 设置超时时间为 3 分钟
+      layers: [metricDepsLayer]         // 添加依赖项层
     });
 
     // 创建定时触发器，每天执行一次
