@@ -31,6 +31,7 @@ class DataCollector:
     def collect_data(self):
         # 返回每个账号下的指标
         for config in self.account_configs:
+            print(f"-----account_id: {config[ACCOUNT_ID]}")
             assumed_role_credentials = self.sts.get_assumed_role_credentials(config[ACCOUNT_ID], config[ROLE])
             cf = CloudFrontManager(assumed_role_credentials)
             distributions = cf.list_deployed_distributions()
@@ -97,20 +98,20 @@ class AlarmTrigger:
         default_message = alarm.__dict__
         email_message = HelperUtils.convert_json_text(default_message)
         print(f"sns开关：{self.config[SEND_SNS_FLAG]}")
-        # if self.config[SEND_SNS_FLAG] == Status.OPEN.value:
-        #     run_sns_operations(is_disable_triggered, self.config, self.config[PAYER_TOPIC_NAME], email_message)
-        # if SEND_LINKED_SNS_FLAG in self.config and self.config[SEND_LINKED_SNS_FLAG] == Status.OPEN.value:
-        #     run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
+        if self.config[SEND_SNS_FLAG] == Status.OPEN.value:
+            run_sns_operations(is_disable_triggered, self.config, self.config[PAYER_TOPIC_NAME], email_message)
+        if SEND_LINKED_SNS_FLAG in self.config and self.config[SEND_LINKED_SNS_FLAG] == Status.OPEN.value:
+            run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
         
         if TELEGRAM_INFO in self.config:
             bot_info = self.config[TELEGRAM_INFO]
             if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
-                asyncio.run(send_telegram_message(bot_info['api_token'], bot_info['chat_id'], email_message))
+                send_telegram_message(bot_info['webhook'], bot_info['chat_id'], email_message)
         
         if LINKED_TELEGRAM_INFO in self.config:
             bot_info = self.config[TELEGRAM_INFO]
             if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
-                asyncio.run(send_telegram_message(bot_info['api_token'], bot_info['chat_id'], email_message))
+                send_telegram_message(bot_info['webhook'], bot_info['chat_id'], email_message)
         
         if 'lark_info' in self.config:
             bot_info = self.config['lark_info']
@@ -130,7 +131,7 @@ class MetricManager:
     def run(self):
         collector = DataCollector(self.account_configs)
         for distribution_id, metric_statistics, config, assumed_role_credentials in collector.collect_data():
-            print(f"aws service id: {distribution_id}")
+            print(f"--------aws service id: {distribution_id}")
             evaluator = PointEvaluator(config)
             all_metrics, is_alarm_triggered = evaluator.evaluate(metric_statistics, config[THRESHOLD])
             print(f"is_alarm_triggered: {is_alarm_triggered}")

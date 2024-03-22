@@ -28,12 +28,12 @@ class AccountConfigManager:
             'send_sns_flag': Status.OPEN.value,
             'telegram_info': {
                 'send_flag': Status.OPEN.value,
-                "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
+                "webhook": "https://api.telegram.org/bot7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s/sendMessage",
                 "chat_id": "-4194166355"
             },
             'linked_telegram_info': {
                 'send_flag': Status.CLOSE.value,
-                "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
+                "webhook": "https://api.telegram.org/bot7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s/sendMessage",
                 "chat_id": ""
             },
             'lark_info': {

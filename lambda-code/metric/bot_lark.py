@@ -1,25 +1,11 @@
 import requests
 import json
-
-
 import logging
 logging.basicConfig(level=logging.INFO)
+
 def send_lark_message(webhook_url, text_message):
     # 发送消息
     try:
-
-        # 构造消息数据
-        message = {
-            "msgtype": "text",
-            "text": {
-                "content": text_message
-            },
-            "at": {
-                "atMobiles": [],  # 被@人的手机号列表,可为空
-                "isAtAll": False  # 是否@所有人,默认为False
-            }
-        }
-
         # 构建请求payload
         payload = {
             "msg_type": "text",

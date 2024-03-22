@@ -1,26 +1,42 @@
-import telegram
+import requests
+import json
 import logging
-import asyncio
-# TODO: 需要判断下chat_id是否存在
 logging.basicConfig(level=logging.INFO)
-async def send_telegram_message(BOT_TOKEN, CHAT_ID, MESSAGE):
+
+def send_telegram_message(webhook_url, chat_id, text_message):
     # 发送消息
     try:
-        logging.info(f"Sending message to chat ID: {CHAT_ID}")
-        bot = telegram.Bot(token=BOT_TOKEN)
-        await bot.send_message(chat_id=CHAT_ID, text=MESSAGE)
-        logging.info("Message sent successfully")
+        # 构建请求payload
+        payload = {
+            "chat_id": chat_id,
+            "text": text_message
+        }
+
+        # 将Python字典转换为JSON字符串
+        message_json = json.dumps(payload)
+
+        # 设置请求头
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        logging.info(f"Sending message to dingding")
+        # 发送请求
+        response = requests.post(webhook_url, data=message_json, headers=headers)
+
+        # 检查响应状态码
+        if response.status_code == 200:
+            logging.info("Message sent successfully")
+        else:
+            logging.info("消息发送失败，状态码:", response.status_code)
+        # 打印响应结果
+        # print(response.text)
     except Exception as e:
         print(f"Error sending message: {e}")
 
 if __name__ == "__main__":
 
-    # 替换为您自己的 Telegram Bot Token
-    BOT_TOKEN = "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s"
+    # 替换为您的telegram机器人Webhook URL
+    webhook_url = "https://api.telegram.org/bot7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s/sendMessage"
+    send_telegram_message(webhook_url,"-4194166355", "这是一条测试消息")
 
-    # 需要发送消息的用户或群组的 ID
-    CHAT_ID = "-4194166355"
-
-    # 要发送的消息内容
-    MESSAGE = "测试：这是一条通过python发送的告警消息!"
-    asyncio.run(send_telegram_message(BOT_TOKEN, CHAT_ID, MESSAGE))
