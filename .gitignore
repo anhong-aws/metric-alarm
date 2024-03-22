@@ -1,6 +1,6 @@
 # CDK
 cdk.out/
-lambda-code/metric/metric-deps
+lambda-code/metric/metric-deps/
 *.js
 *.d.ts
 # Logs
