@@ -5,6 +5,8 @@ from cloudwatch import get_metric_statistics
 from sns_main import run_sns_operations
 from alarm_manager import AlarmManager
 from helper_utils import HelperUtils
+from telegram_bot import send_telegram_message
+import asyncio
 
 class DataCollector:
     def __init__(self, account_configs):
@@ -93,11 +95,21 @@ class AlarmTrigger:
         default_message = alarm.__dict__
         email_message = HelperUtils.convert_json_text(default_message)
         print(f"sns开关：{self.config[SEND_SNS_FLAG]}")
-        if self.config[SEND_SNS_FLAG] == Status.OPEN.value:
-            run_sns_operations(is_disable_triggered, self.config, self.config[PAYER_TOPIC_NAME], email_message)
-        if SEND_LINKED_SNS_FLAG in self.config and self.config[SEND_LINKED_SNS_FLAG] == Status.OPEN.value:
-            run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
-
+        # if self.config[SEND_SNS_FLAG] == Status.OPEN.value:
+        #     run_sns_operations(is_disable_triggered, self.config, self.config[PAYER_TOPIC_NAME], email_message)
+        # if SEND_LINKED_SNS_FLAG in self.config and self.config[SEND_LINKED_SNS_FLAG] == Status.OPEN.value:
+        #     run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
+        
+        if TELEGRAM_INFO in self.config:
+            telegram_info = self.config[TELEGRAM_INFO]
+            if telegram_info and telegram_info[SEND_TELEGRAM_FLAG] == Status.OPEN.value:
+                asyncio.run(send_telegram_message(telegram_info['api_token'], telegram_info['chat_id'], email_message))
+        
+        if LINKED_TELEGRAM_INFO in self.config:
+            telegram_info = self.config[TELEGRAM_INFO]
+            if telegram_info and telegram_info[SEND_TELEGRAM_FLAG] == Status.OPEN.value:
+                asyncio.run(send_telegram_message(telegram_info['api_token'], telegram_info['chat_id'], email_message))
+        
 
 class MetricManager:
     def __init__(self, account_configs):

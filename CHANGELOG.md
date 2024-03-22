@@ -4,19 +4,27 @@
 
 ## [Unreleased]
 
-## [v0.6] - 2024-05-12
+## [v0.8] - 2024-05-12
 - Added multiple payers (multi-tenant deployment mode).
 - Added multi-tenant table.
 
-## [v0.5] - 2024-05-5
+## [v0.7] - 2024-05-5
 - Added support for non-payer deployment mode.
 - Change setting.
+
+## [v0.6] - 2024-04-30
+- Added alarm mode: 钉钉.
+- Change setting.
   
-## [v0.4] - 2024-04-03
+## [v0.5] - 2024-03-26
+- Added alarm mode: larker.
+- Change setting.
+
+## [v0.4] - 2024-03-22
 - Added alarm mode: Telegram.
 - Change setting.
   
-## [v0.3] - 2024-03-25
+## [v0.3] - 2024-03-21
 - Supports automatically stopping CloudFront Distribute after an alarm.
 - config data: add field of autoDisableService etc.
 - 代码大重构

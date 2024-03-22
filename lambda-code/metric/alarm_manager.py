@@ -10,7 +10,7 @@ class AlarmManager:
             f"High request metrics for account: {self.config['account_id']}, "
             f"distribution id: {distribution_id},"
         )
-        alarm.description = "请查看cloudfront分发监控，确认您的流量是否存在异常"
+        alarm.description = "请查看cloudfront分发监控，确认您的流量是否异常"
 
         # 假设 point['Timestamp'] 是一个 datetime 对象
         point_timestamp = point['Timestamp']
@@ -23,7 +23,6 @@ class AlarmManager:
         alarm.timestamp = point_timestamp.strftime("%Y-%m-%d %H:%M:%S")
         alarm.state_change = "OK -> ALARM"
         alarm.reason_for_state_change = (
-            f"OK -> ALARM: "
             f"连续{self.config['consecutive_points']}次在{self.config['period']/60}分钟时间段的总请求数列表为： {sum_str}，"
             f"均超过设定的阈值: {self.config['threshold']}. "
         )

@@ -26,6 +26,16 @@ class AccountConfigManager:
             'payer_topic_name': 'metric-alarm-topic',
             'status': Status.OPEN.value,
             'send_sns_flag': Status.OPEN.value,
+            'telegram_info': {
+                'send_telegram_flag': Status.OPEN.value,
+                "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
+                "chat_id": "-4194166355"
+            },
+            'linked_telegram_info': {
+                'send_telegram_flag': Status.CLOSE.value,
+                "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
+                "chat_id": ""
+            },
             # 'send_linked_sns_flag': Status.CLOSE.value,
             # 'save_metric_log_flag': Status.OPEN.value,
             "auto_disable_service_threshold": 500000,
