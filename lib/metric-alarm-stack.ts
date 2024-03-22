@@ -54,11 +54,11 @@ export class MetricAlarmStack extends cdk.Stack {
 
     // 创建 Python Lambda 函数
     const alarmLambda = new lambda.Function(this, 'MetricLambda', {
-      runtime: lambda.Runtime.PYTHON_3_8,
+      runtime: lambda.Runtime.PYTHON_3_10,
       handler: 'index.handler', // 指定 Lambda 处理程序的入口函数
       code: lambda.Code.fromAsset('./lambda-code/metric'), // 替换为您的 Python Lambda 代码路径
       role: lambdaExecutionRole, // 关联 Lambda 执行角色
-      memorySize: 128, // 内存128M
+      memorySize: 256, // 内存128M
       timeout: cdk.Duration.minutes(3) // 设置超时时间为 3 分钟
     });
 

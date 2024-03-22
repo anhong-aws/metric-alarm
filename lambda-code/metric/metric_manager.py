@@ -5,7 +5,9 @@ from cloudwatch import get_metric_statistics
 from sns_main import run_sns_operations
 from alarm_manager import AlarmManager
 from helper_utils import HelperUtils
-from telegram_bot import send_telegram_message
+from bot_telegram import send_telegram_message
+from bot_dingding import send_dingding_message
+from bot_lark import send_lark_message
 import asyncio
 
 class DataCollector:
@@ -101,15 +103,24 @@ class AlarmTrigger:
         #     run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
         
         if TELEGRAM_INFO in self.config:
-            telegram_info = self.config[TELEGRAM_INFO]
-            if telegram_info and telegram_info[SEND_TELEGRAM_FLAG] == Status.OPEN.value:
-                asyncio.run(send_telegram_message(telegram_info['api_token'], telegram_info['chat_id'], email_message))
+            bot_info = self.config[TELEGRAM_INFO]
+            if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
+                asyncio.run(send_telegram_message(bot_info['api_token'], bot_info['chat_id'], email_message))
         
         if LINKED_TELEGRAM_INFO in self.config:
-            telegram_info = self.config[TELEGRAM_INFO]
-            if telegram_info and telegram_info[SEND_TELEGRAM_FLAG] == Status.OPEN.value:
-                asyncio.run(send_telegram_message(telegram_info['api_token'], telegram_info['chat_id'], email_message))
+            bot_info = self.config[TELEGRAM_INFO]
+            if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
+                asyncio.run(send_telegram_message(bot_info['api_token'], bot_info['chat_id'], email_message))
         
+        if 'lark_info' in self.config:
+            bot_info = self.config['lark_info']
+            if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
+                send_lark_message(bot_info['webhook'], email_message)
+        
+        if 'dingding_info' in self.config:
+            bot_info = self.config['dingding_info']
+            if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
+                send_dingding_message(bot_info['webhook'], email_message)
 
 class MetricManager:
     def __init__(self, account_configs):

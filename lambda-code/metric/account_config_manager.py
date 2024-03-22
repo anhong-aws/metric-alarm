@@ -27,14 +27,22 @@ class AccountConfigManager:
             'status': Status.OPEN.value,
             'send_sns_flag': Status.OPEN.value,
             'telegram_info': {
-                'send_telegram_flag': Status.OPEN.value,
+                'send_flag': Status.OPEN.value,
                 "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
                 "chat_id": "-4194166355"
             },
             'linked_telegram_info': {
-                'send_telegram_flag': Status.CLOSE.value,
+                'send_flag': Status.CLOSE.value,
                 "api_token": "7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s",
                 "chat_id": ""
+            },
+            'lark_info': {
+                'send_flag': Status.OPEN.value,
+                "webhook": "https://open.larksuite.com/open-apis/bot/v2/hook/07a77d6f-b71d-4ae3-b374-27d7e13f8697"
+            },
+            'dingding_info': {
+                'send_flag': Status.OPEN.value,
+                "webhook": "https://oapi.dingtalk.com/robot/send?access_token=cf34c5039b75c5883a3271bcfb0979312a911242d560891f1c346b85d7a26abf"
             },
             # 'send_linked_sns_flag': Status.CLOSE.value,
             # 'save_metric_log_flag': Status.OPEN.value,

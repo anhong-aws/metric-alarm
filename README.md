@@ -1,5 +1,6 @@
 # 介绍
-当CloudFront的Request指标超过设定的阈值的时候，发送告警信息
+当CloudFront的Request指标超过设定的阈值的时候，发送告警信息,
+可以支持发送到SNS、邮件、钉钉、Lark、Telegram
 
 Please run `cdk deploy --all` to deploy this stack in your AWS account.
 # 部署
