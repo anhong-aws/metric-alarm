@@ -8,7 +8,6 @@ from helper_utils import HelperUtils
 from bot_telegram import send_telegram_message
 from bot_dingding import send_dingding_message
 from bot_lark import send_lark_message
-import asyncio
 
 class DataCollector:
     def __init__(self, account_configs):
