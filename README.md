@@ -1,6 +1,9 @@
 # 介绍
 当CloudFront的Request指标超过设定的阈值的时候，发送告警信息,
 可以支持发送到SNS、邮件、钉钉、Lark、Telegram
+达到可能被DDOS攻击的高阈值的时候，自动停止CloudFront Distribute
+
+阈值设定在配置里面设置，可以通过平时指标数据采集，利用方差算法或者机器学习，计算出告警阈值的数值
 
 Please run `cdk deploy --all` to deploy this stack in your AWS account.
 # 部署
