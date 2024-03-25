@@ -19,48 +19,44 @@ class AccountConfigManager:
             'account_id': os.getenv('MOCK_ACCOUNT_ID', '123'),
             'account_name': os.getenv('MOCK_ACCOUNT_NAME', 'demo'),
             'role': 'OrganizationAccountAccessRole',
+            'status': Status.OPEN.value,
+            'consecutive_points': 1,
+            'threshold': 1,
             'period': 300,
             'minutes': 30,
-            'threshold': 1,
-            'consecutive_points': 1,
-            'payer_topic_name': 'metric-alarm-topic',
-            'status': Status.OPEN.value,
+            "auto_disable_service_threshold": 500000,
+            "auto_disable_service_flag": Status.OPEN.value,
             'send_sns_flag': Status.OPEN.value,
+            'payer_topic_name': 'metric-alarm-topic',
+            'send_linked_sns_flag': Status.CLOSE.value,
+            'linked_topic_name': 'metric-alarm-topic'+os.getenv('MOCK_ACCOUNT_ID', '123'),
             'telegram_info': {
                 'send_flag': Status.OPEN.value,
-                "webhook": "https://api.telegram.org/bot7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s/sendMessage",
+                "webhook": os.getenv('TELEGRAM_URL', 'https://'),
                 "chat_id": "-4194166355"
-            },
-            'linked_telegram_info': {
-                'send_flag': Status.CLOSE.value,
-                "webhook": "https://api.telegram.org/bot7081516317:AAGje-aVGPswokFUL3Okxgz8efWLbBQjC7s/sendMessage",
-                "chat_id": ""
             },
             'lark_info': {
                 'send_flag': Status.OPEN.value,
-                "webhook": "https://open.larksuite.com/open-apis/bot/v2/hook/07a77d6f-b71d-4ae3-b374-27d7e13f8697"
+                "webhook": os.getenv('LARK_URL', 'https://'),
             },
             'dingding_info': {
                 'send_flag': Status.OPEN.value,
-                "webhook": "https://oapi.dingtalk.com/robot/send?access_token=cf34c5039b75c5883a3271bcfb0979312a911242d560891f1c346b85d7a26abf"
+                "webhook": os.getenv('DINGDING_URL', 'https://'),
             },
-            # 'send_linked_sns_flag': Status.CLOSE.value,
-            # 'save_metric_log_flag': Status.OPEN.value,
-            "auto_disable_service_threshold": 500000,
-            # "max_request_multiple": 5,
-            "auto_disable_service_flag": Status.OPEN.value,
+            'linked_telegram_info': {
+                'send_flag': "close",
+                "webhook": os.getenv('TELEGRAM_URL', 'https://'),
+                "chat_id": ""
+            },
+            'linked_lark_info': {
+                'send_flag': "close",
+                "webhook": ""
+            },
+            'linded_dingding_info': {
+                'send_flag': "close",
+                "webhook": ""
+            },
             "use_mock": True,
-            # "aws_services":[
-            #     {
-            #         "name": "cf",
-            #         "auto_disable_service_flag": Status.OPEN,
-            #     },
-            #     {
-            #         "name": "alb",
-            #         "auto_disable_service_flag": Status.OPEN,
-            #     }
-            # ]
-            # ,'payer_email_addresses' : ['jarrywen@163.com', 'jarrywenjack@gmail.com']
         }
 
     def read_account_configs(self, use_mock=False):

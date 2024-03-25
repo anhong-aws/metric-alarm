@@ -7,9 +7,12 @@ Please run `cdk deploy --all` to deploy this stack in your AWS account.
 ## 1.部署CDK应用程序
 ```
 cd ./metric-alarm
+# 安装和编译typescript
 npm install
 npm run build
+# 打包requests等依赖包到本地目录下，用于lambda layer
 ./package_lambda_layer.sh
+# 部署EventBridge、lambda、dynamodb到aws
 cdk deploy --all
 ```
 本工程会创建
@@ -31,21 +34,48 @@ table name: account-metric-config-items
 Example Record: 
 ```
 {
- "account_id": "123",
- "account_name": "account name",
- "auto_disable_service_flag": "open",
- "auto_disable_service_threshold": 500000,
- "consecutive_points": 4,
- "linked_topic_name": "metric-alarm-topic-xxx",
- "minutes": 30,
- "payer_topic_name": "metric-alarm-topic",
- "period": 300,
- "role": "TestAlarmRole",
- "save_metric_log_flag": "open",
- "send_linked_sns_flag": "close",
- "send_sns_flag": "open",
- "status": "open",
- "threshold": 5000
+    "account_id": "123",
+    "account_name": "account name",
+    "role": "TestAlarmRole",
+    "status": "open",
+    "consecutive_points": 4,
+    "threshold": 5000,
+    "minutes": 30,
+    "period": 300,
+    "consecutive_points": 4,
+    "threshold": 5000,
+    "send_sns_flag": "open",
+    "payer_topic_name": "metric-alarm-topic",
+    "send_linked_sns_flag": "close",
+    "linked_topic_name": "metric-alarm-topic-xxx",
+    "auto_disable_service_flag": "open",
+    "auto_disable_service_threshold": 500000,
+    'telegram_info': {
+        'send_flag': "open",
+        "webhook": "https://api.telegram.org/bot{telegram-bot-token}/sendMessage",
+        "chat_id": "-4194166355111"
+    },
+    'lark_info': {
+        'send_flag': "open",
+        "webhook": "{lark webhook url}"
+    },
+    'dingding_info': {
+        'send_flag': "open",
+        "webhook": "{lark webhook url}"
+    },
+    'linked_telegram_info': {
+        'send_flag': "close",
+        "webhook": "https://api.telegram.org/{telegram-bot-token}/sendMessage",
+        "chat_id": "-4194166355111"
+    },
+    'linked_lark_info': {
+        'send_flag': "close",
+        "webhook": "{lark webhook url}"
+    },
+    'linded_dingding_info': {
+        'send_flag': "close",
+        "webhook": "{dingding webhook url}"
+    }
 }
 ```
 ![config list](docs/images/config_list.png)
