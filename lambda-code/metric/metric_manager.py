@@ -30,8 +30,9 @@ class DataCollector:
     def collect_data(self):
         # 返回每个账号下的指标
         for config in self.account_configs:
-            print(f"-----account_id: {config[ACCOUNT_ID]}")
+            print(f"-----account_id: {config[ACCOUNT_ID]} {config[ACCOUNT_TYPE]} {config[ROLE]}")
             assumed_role_credentials = self.sts.get_assumed_role_credentials(config[ACCOUNT_ID], config[ROLE])
+            print(f"-----assumed_role_credentials: {assumed_role_credentials}")
             cf = CloudFrontManager(assumed_role_credentials)
             distributions = cf.list_deployed_distributions()
             for distribution in distributions:
@@ -96,18 +97,11 @@ class AlarmTrigger:
     def send_notifications(self, alarm, is_disable_triggered):
         default_message = alarm.__dict__
         email_message = HelperUtils.convert_json_text(default_message)
-        print(f"sns开关：{self.config[SEND_SNS_FLAG]}")
-        if self.config[SEND_SNS_FLAG] == Status.OPEN.value:
-            run_sns_operations(is_disable_triggered, self.config, self.config[PAYER_TOPIC_NAME], email_message)
-        if SEND_LINKED_SNS_FLAG in self.config and self.config[SEND_LINKED_SNS_FLAG] == Status.OPEN.value:
-            run_sns_operations(is_disable_triggered, self.config, self.config[LINKED_TOPIC_NAME], email_message)
-        
+        print(f"sns开关：{self.config['sns_info'][SEND_SNS_FLAG]}")
+        if self.config['sns_info'][SEND_SNS_FLAG] == Status.OPEN.value:
+            run_sns_operations(is_disable_triggered, self.config, self.config['sns_info'][TOPIC_NAME], email_message)
+  
         if TELEGRAM_INFO in self.config:
-            bot_info = self.config[TELEGRAM_INFO]
-            if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
-                send_telegram_message(bot_info['webhook'], bot_info['chat_id'], email_message)
-        
-        if LINKED_TELEGRAM_INFO in self.config:
             bot_info = self.config[TELEGRAM_INFO]
             if bot_info and bot_info[SEND_FLAG] == Status.OPEN.value:
                 send_telegram_message(bot_info['webhook'], bot_info['chat_id'], email_message)

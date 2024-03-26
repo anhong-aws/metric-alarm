@@ -24,8 +24,8 @@ class STSManager:
         :param role: The name of the role to assume.
         :return: A dictionary containing temporary credentials.
         """
-        print(account_id)
         assumed_role_arn = self.get_assumed_role_arn(account_id, role)
+        print(assumed_role_arn)
         return self.get_assumed_role_credentials_by_arn(assumed_role_arn)
     
     def get_assumed_role_credentials_by_arn(self, role_arn):

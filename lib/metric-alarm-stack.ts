@@ -17,6 +17,7 @@ export class MetricAlarmStack extends cdk.Stack {
     const table = new ddb.Table(this, 'AccountMetricConfigItemsTable', {
       tableName: 'account-metric-config-items',
       partitionKey: {name: 'account_id', type: ddb.AttributeType.STRING},
+      sortKey: { name: 'account_type', type: ddb.AttributeType.STRING },
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     })
